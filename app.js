@@ -63,7 +63,8 @@ function paint(){
  p.innerHTML=html(r);
  return pages();
 }
-const commit=()=>{save();paint()};
+const touch=()=>{cur().mod=Date.now()};
+const commit=()=>{touch();save();paint()};
 
 function form(){
  const r=cur(),d=r.d;
@@ -110,10 +111,10 @@ $('#details').addEventListener('click',e=>{
  else if(x.dc){if(!confirm('Delete this section and everything in it?'))return;r.cs=r.cs.filter(s=>s.k!==x.dc);delete r.d[x.dc];norm(r)}
  else if(x.addcs){const n=$('#csn').value.trim();if(!n)return toast('Enter a section name first');const list=$('#cst').value==='list',k='x_'+Date.now().toString(36);r.cs.push({k,t:n,list,custom:1});r.d[k]=list?[]:'';norm(r)}
  else return;
- save();form();paint();
+ touch();save();form();paint();
  if(x.mv)document.querySelector(`[data-mv="${x.mv}"]`)?.scrollIntoView({block:'nearest'});
 });
-$('#type').onchange=e=>{const r=cur();r.type=e.target.value;r.ord=null;norm(r);save();form();paint()};
+$('#type').onchange=e=>{const r=cur();r.type=e.target.value;r.ord=null;norm(r);touch();save();form();paint()};
 $('#tpl').onchange=e=>{cur().tpl=e.target.value;commit()};
 $('#color').oninput=e=>{cur().s.color=e.target.value;commit()};
 $('#font').onchange=e=>{cur().s.font=e.target.value;commit()};
@@ -150,4 +151,27 @@ $('#one').onclick=()=>{
  toast(n>1?`Still ${n} pages at 7 pt. Hide a section or shorten the content.`:r.s.size<z?`Font size reduced to ${r.s.size} pt to fit one page`:'Already fits on one page');
 };
 addEventListener('load',()=>paint());
-load();
+
+function home(){
+ const fmt=t=>t?'Edited '+new Date(t).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'}):'';
+ $('#grid').innerHTML=S.list.map(r=>{
+  const tn=(TPL.find(t=>t[0]===r.tpl)||[0,'Classic'])[1];
+  return `<article class="rc" tabindex="0" data-act="open" data-id="${r.id}" aria-label="Open ${esc(r.name)}"><div class="thumb"><div class="th t-${r.tpl}" style="--c:${esc(r.s.color)};--f:${esc(r.s.font)};--z:${r.s.size}pt">${html(r)}</div></div>
+  <div class="meta"><b>${esc(r.name)}</b><span>${r.type==='pro'?'Professional':'Fresher'} &middot; ${tn}</span><span>${fmt(r.mod)}</span></div>
+  <div class="acts"><button class="add" data-act="open" data-id="${r.id}">Edit</button><button class="add" data-act="dup" data-id="${r.id}">Duplicate</button><button class="lnk" data-act="del" data-id="${r.id}">Delete</button></div></article>`}).join('')+
+  `<article class="rc nw" tabindex="0" data-act="new">+ New resume</article>`;
+}
+function show(h){document.body.classList.toggle('home',h);if(h){home();scrollTo(0,0)}else{load();scrollTo(0,0)}}
+$('#grid').addEventListener('click',e=>{
+ const b=e.target.closest('[data-act]');if(!b)return;
+ const a=b.dataset.act,p=S.cur;
+ if(b.dataset.id)S.cur=b.dataset.id;
+ if(a==='open'){save();show(false)}
+ else if(a==='new'){$('#new').onclick();if(S.cur!==p)show(false);else S.cur=p}
+ else if(a==='dup'){$('#dup').onclick();home()}
+ else if(a==='del'){const n=S.list.length;$('#del').onclick();if(S.list.length===n)S.cur=p;home()}
+});
+$('#grid').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.classList.contains('rc'))e.target.click()});
+$('#homeBtn').onclick=()=>show(true);
+$('.brand').onclick=()=>show(true);
+show(true);
