@@ -19,9 +19,9 @@ const ORD={
 
 const TPL=[['classic','Classic'],['modern','Modern'],['compact','Compact'],['minimal','Minimal'],['executive','Executive'],['banner','Banner'],['bold','Bold bars'],['underline','Underline'],['boxed','Boxed'],['elegant','Elegant'],['timeline','Timeline'],['split','Split header'],['soft','Soft'],['ruled','Ruled'],['literary','Literary'],['accent','Accent']];
 $('#tpl').innerHTML=TPL.map(([v,n])=>`<option value="${v}">${n}</option>`).join('');
-const blank=()=>({name:'',title:'',email:'',phone:'',location:'',links:'',summary:'',skills:'',extra:'',experience:[],education:[],projects:[],certs:[]});
+const blank=()=>({name:'',title:'',email:'',phone:'',location:'',links:'',summary:'',skills:[],extra:'',experience:[],education:[],projects:[],certs:[]});
 const mk=(name,type='fresher')=>norm({id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),name,type,tpl:'classic',s:{color:'#1f4e79',font:'Arial,Helvetica,sans-serif',size:10.5},on:{},cs:[],names:{},d:blank()});
-const sample=()=>{const r=mk('My first resume');Object.assign(r.d,{name:'Alex Morgan',title:'Software Engineer',email:'alex@example.com',phone:'+91 90000 00000',location:'Chandigarh, India',links:'linkedin.com/in/alexmorgan | github.com/alexmorgan',summary:'Computer science graduate with hands-on experience in test automation and web development, looking for an SDE or SDET role.',skills:'Java, Python, JavaScript, SQL, Selenium, REST APIs, Git',extra:'Solved 300+ problems on coding platforms'});
+const sample=()=>{const r=mk('My first resume');Object.assign(r.d,{name:'Alex Morgan',title:'Software Engineer',email:'alex@example.com',phone:'+91 90000 00000',location:'Chandigarh, India',links:'linkedin.com/in/alexmorgan | github.com/alexmorgan',summary:'Computer science graduate with hands-on experience in test automation and web development, looking for an SDE or SDET role.',skills:[{a:'Languages',b:'Java, Python, JavaScript, SQL',c:'',d:''},{a:'Testing',b:'Selenium, REST APIs, JUnit',c:'',d:''},{a:'Tools',b:'Git, Jenkins',c:'',d:''}],extra:'Solved 300+ problems on coding platforms'});
  r.d.education.push({a:'M.Tech, Computer Science',b:'Your University',c:'2025 - 2027',d:'CGPA: 8.5/10'});
  r.d.projects.push({a:'Price Predictor',b:'Python, scikit-learn',c:'2024',d:'Built a regression model with 92% accuracy\nPublished the results as a research paper'});
  r.d.experience.push({a:'SDET Intern',b:'Company Name',c:'Jan 2023 - Jun 2023',d:'Wrote automated API and UI tests\nCut regression time by 40%'});return r};
@@ -29,7 +29,7 @@ const sample=()=>{const r=mk('My first resume');Object.assign(r.d,{name:'Alex Mo
 let S;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
 if(!S||!S.list||!S.list.length){const r=sample();S={cur:r.id,list:[r]}}
 S.list.forEach(norm);
-function norm(r){r.cs=r.cs||[];r.names=r.names||{};const all=[...SEC,...r.cs].map(s=>s.k);r.ord=(r.ord||ORD[r.type]).filter(k=>all.includes(k));all.forEach(k=>{if(!r.ord.includes(k))r.ord.push(k)});return r}
+function norm(r){if(typeof r.d.skills==='string')r.d.skills=r.d.skills.trim()?[{a:'',b:r.d.skills,c:'',d:''}]:[];r.cs=r.cs||[];r.names=r.names||{};const all=[...SEC,...r.cs].map(s=>s.k);r.ord=(r.ord||ORD[r.type]).filter(k=>all.includes(k));all.forEach(k=>{if(!r.ord.includes(k))r.ord.push(k)});return r}
 const secs=r=>{const a=[...SEC,...r.cs];return r.ord.map(k=>a.find(s=>s.k===k))},ttl=(r,s)=>r.names[s.k]||s.t;
 const cur=()=>S.list.find(r=>r.id===S.cur)||S.list[0];
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('Could not save: browser storage is full or blocked')}};
@@ -40,7 +40,7 @@ function sec(k,r){
  const d=r.d,s=secs(r).find(s=>s.k===k),t=esc(ttl(r,s));let b='';
  if(s.list)b=d[k].filter(i=>i.a||i.b||i.c||i.d).map(i=>{const l=lines(i.d);
   return `<div class="it"><div class="row"><b>${esc(i.a)}</b><span class="dt">${esc(i.c)}</span></div>${i.b?`<div class="sub">${esc(i.b)}</div>`:''}${l.length?`<ul>${l.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}</div>`}).join('');
- else if(k==='skills'){const v=d.skills.split(/[,\n]/).map(x=>x.trim()).filter(Boolean).join(', ');b=v?`<p>${esc(v)}</p>`:''}
+ else if(k==='skills')b=d.skills.map(i=>{const v=String(i.b||'').split(/[,\n]/).map(x=>x.trim()).filter(Boolean).join(', ');return v?`<p>${i.a?`<b>${esc(i.a)}:</b> `:''}${esc(v)}</p>`:''}).join('');
  else if(k==='summary')b=d.summary.trim()?`<p>${esc(d.summary)}</p>`:'';
  else{const l=lines(d[k]);b=l.length?`<ul>${l.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}
  return b?`<section><h2>${t}</h2>${b}</section>`:'';
@@ -79,6 +79,10 @@ function form(){
     h+=`<div class="item">`+['a','b','c'].map((g,j)=>`<input ${at(g)} placeholder="${lab[j]}" value="${esc(it[g])}">`).join('')+
      `<textarea ${at('d')} placeholder="Details: one bullet per line">${esc(it.d)}</textarea><button class="lnk" data-rm="${k}" data-i="${i}">Remove</button></div>`});
    h+=`<button class="add" data-add="${k}">+ Add entry</button>`;
+  }else if(k==='skills'){
+   d.skills.forEach((it,i)=>{const at=g=>`data-l="skills" data-i="${i}" data-g="${g}"`;
+    h+=`<div class="item"><input ${at('a')} placeholder="Category (e.g. Languages, Tools)" value="${esc(it.a)}"><textarea ${at('b')} placeholder="Skills, comma separated: Java, Python, SQL">${esc(it.b)}</textarea><button class="lnk" data-rm="skills" data-i="${i}">Remove</button></div>`});
+   h+=`<button class="add" data-add="skills">+ Add skill list</button>`;
   }else h+=`<textarea data-f="${k}" placeholder="${PH[k]||'One item per line'}">${esc(d[k])}</textarea>`;
   h+=`</div>`;
  });
