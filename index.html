@@ -8,21 +8,23 @@
 </head>
 <body>
 <header class="top">
+  <button id="homeBtn" class="ed">&larr; All resumes</button>
   <strong class="brand">Resume Builder</strong>
-  <div class="bar">
+  <div class="bar ed">
     <select id="profile" aria-label="Saved resumes"></select>
     <button id="new">New</button>
     <button id="dup">Duplicate</button>
     <button id="ren">Rename</button>
     <button id="del">Delete</button>
   </div>
-  <div class="bar">
+  <div class="bar ed">
     <span id="pages" class="pg" title="Estimated from the layout. Check the print preview to confirm."></span>
     <button id="one">One pager</button>
     <button class="pri" id="pdf">Download PDF</button>
     <button class="pri" id="doc">Download Word</button>
   </div>
 </header>
+<section id="home"><div class="hw"><div class="hh"><div><h1>Your resumes</h1><p>Pick a resume to keep editing, or start a new one for a different role.</p></div><button class="pri" data-act="new" onclick="document.getElementById('grid').querySelector('.nw').click()">+ New resume</button></div><div id="grid"></div></div></section>
 <main class="app">
   <aside id="editor">
     <div class="card">
