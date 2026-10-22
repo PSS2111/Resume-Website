@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resume Builder</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <strong class="brand">Resume Builder</strong>
+  <div class="bar">
+    <select id="profile" aria-label="Saved resumes"></select>
+    <button id="new">New</button>
+    <button id="dup">Duplicate</button>
+    <button id="ren">Rename</button>
+    <button id="del">Delete</button>
+  </div>
+  <div class="bar">
+    <button class="pri" id="pdf">Download PDF</button>
+    <button class="pri" id="doc">Download Word</button>
+  </div>
+</header>
+<main class="app">
+  <aside id="editor">
+    <div class="card">
+      <h3>Style</h3>
+      <label>Resume type
+        <select id="type"><option value="fresher">Fresher (education first)</option><option value="pro">Working professional (experience first)</option></select></label>
+      <label>Template
+        <select id="tpl"></select></label>
+      <div class="two">
+        <label>Accent color <input type="color" id="color"></label>
+        <label>Font size <input type="range" id="size" min="9" max="13" step="0.5"><small id="sizeV"></small></label>
+      </div>
+      <label>Font
+        <select id="font">
+          <option value="Arial,Helvetica,sans-serif">Arial</option>
+          <option value="Calibri,Carlito,sans-serif">Calibri</option>
+          <option value="Verdana,Geneva,sans-serif">Verdana</option>
+          <option value="Tahoma,Geneva,sans-serif">Tahoma</option>
+          <option value="Georgia,serif">Georgia</option>
+          <option value="'Times New Roman',Times,serif">Times New Roman</option>
+          <option value="Garamond,'EB Garamond',serif">Garamond</option>
+        </select></label>
+      <p class="hint">Single-column layout, plain text and standard headings keep every template readable by ATS software. Use the switch on each section to show or hide it.</p>
+    </div>
+    <div id="details"></div>
+  </aside>
+  <section id="stage"><div id="paper"></div></section>
+</main>
+<div id="toast" role="status"></div>
+<script src="app.js"></script>
+</body>
+</html>

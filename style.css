@@ -1,0 +1,94 @@
+:root{--ink:#1b2430;--mut:#667085;--line:#d9dee5;--bg:#e9ecf0;--acc:#1f4e79}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.4 system-ui,Segoe UI,Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+.top{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding:10px 16px;background:var(--ink);color:#fff}
+.brand{font-size:16px;margin-right:auto}
+.bar{display:flex;flex-wrap:wrap;gap:6px}
+button,select,input,textarea{font:inherit;color:inherit}
+button{padding:6px 12px;border:1px solid #ffffff55;border-radius:6px;background:transparent;color:#fff;cursor:pointer}
+button:hover{background:#ffffff1f}
+button.pri{background:#fff;color:var(--ink);border-color:#fff;font-weight:600}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #3b82f6;outline-offset:1px}
+.top select{padding:6px 8px;border-radius:6px;background:#fff;color:var(--ink);max-width:200px}
+.app{display:grid;grid-template-columns:minmax(320px,430px) 1fr;align-items:start}
+#editor{padding:14px;height:calc(100vh - 56px);overflow:auto;background:#f6f7f9;border-right:1px solid var(--line)}
+.card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:12px}
+.card.off{opacity:.55}
+.card h3{margin:0 0 8px;font-size:14px}
+label{display:block;margin-bottom:8px;font-size:12px;color:var(--mut)}
+label input:not([type]),label select,textarea,.item input{display:block;width:100%;margin-top:3px;padding:7px 8px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);font-size:13px}
+textarea{min-height:70px;resize:vertical}
+.item{border-top:1px dashed var(--line);padding-top:8px;margin-top:8px}
+.item input,.item textarea{margin:0 0 6px}
+.sw{display:flex;gap:8px;align-items:center;margin:0;font-size:14px;color:var(--ink);font-weight:600;cursor:pointer}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+input[type=color]{display:block;width:100%;height:32px;padding:2px;border:1px solid var(--line);border-radius:6px;background:#fff}
+input[type=range]{width:100%}
+.hint{margin:4px 0 0;font-size:12px;color:var(--mut)}
+.add,.lnk{border-color:var(--line);color:var(--ink);font-size:12px;padding:4px 10px}
+.add:hover,.lnk:hover{background:#eef1f5}
+.lnk{color:#b42318}
+#stage{padding:24px;overflow:auto;display:flex;justify-content:center}
+#toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:8px 14px;border-radius:6px;opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.show{opacity:1}
+
+/* Resume paper */
+#paper{width:210mm;min-height:297mm;padding:14mm 16mm;background:#fff;color:#111;font-family:var(--f);font-size:var(--z);line-height:1.4;box-shadow:0 2px 14px #0003;flex:none}
+#paper h1{margin:0;font-size:2.2em;line-height:1.15}
+#paper h2{margin:1em 0 .4em;font-size:1.1em}
+#paper p,#paper ul{margin:.2em 0}
+#paper ul{padding-left:1.2em}
+#paper .ct{margin-top:.3em}
+#paper .row{display:flex;justify-content:space-between;gap:12px}
+#paper .sub{font-style:italic}
+#paper .it{margin-bottom:.6em;break-inside:avoid}
+.t-classic header{text-align:center}
+.t-classic h2{text-transform:uppercase;letter-spacing:.04em;color:var(--c);border-bottom:1.5px solid var(--c);padding-bottom:.15em}
+.t-modern h1{color:var(--c)}
+.t-modern h2{color:var(--c);border-left:4px solid var(--c);padding-left:.5em}
+.t-compact{line-height:1.28;padding:10mm 12mm!important}
+.t-compact h1{font-size:1.9em;color:var(--c)}
+.t-compact h2{margin:.7em 0 .3em;padding:.15em .5em;color:var(--c);background:color-mix(in srgb,var(--c) 12%,#fff)}
+.t-compact .it{margin-bottom:.35em}
+
+@media(max-width:900px){.app{display:block}#editor{height:auto;border:0}#stage{padding:8px;zoom:.45}}
+@media print{
+  @page{size:A4;margin:0}
+  body{background:#fff}
+  .top,#editor,#toast{display:none!important}
+  .app{display:block}
+  #stage{padding:0;zoom:1;display:block;overflow:visible}
+  #paper{width:auto;min-height:0;padding:14mm 16mm;box-shadow:none;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+  .t-compact{padding:10mm 12mm!important}
+  #paper,#paper *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+/* More templates */
+.hd{display:flex;justify-content:space-between;align-items:center;gap:6px}
+.hd span{display:flex;gap:4px}
+.t-minimal h1{font-weight:400;letter-spacing:.02em}
+.t-minimal h2{font-size:1em;color:var(--c)}
+.t-executive header{border-bottom:3px double var(--c);padding-bottom:.5em}
+.t-executive h1{text-transform:uppercase;letter-spacing:.06em;color:var(--c)}
+.t-executive h2{text-transform:uppercase;font-size:1em;border-bottom:1px solid #bbb}
+.t-banner header{background:var(--c);color:#fff;padding:.8em 1em}
+.t-banner h2{color:var(--c);border-bottom:1px solid var(--c)}
+.t-bold h1{color:var(--c)}
+.t-bold h2{background:var(--c);color:#fff;padding:.15em .6em}
+.t-underline h2{display:inline-block;color:var(--c);border-bottom:2px solid var(--c);padding-right:1.5em}
+.t-boxed h2{color:var(--c);border:1.5px solid var(--c);padding:.15em .6em}
+.t-elegant header{text-align:center}
+.t-elegant h1{font-weight:400;text-transform:uppercase;letter-spacing:.15em}
+.t-elegant h2{text-align:center;font-weight:400;text-transform:uppercase;letter-spacing:.2em;color:var(--c);border-top:1px solid #ccc;border-bottom:1px solid #ccc;padding:.2em}
+.t-timeline h2{color:var(--c);border-bottom:1px solid #ddd}
+.t-timeline .it{border-left:2px solid var(--c);padding-left:.8em}
+.t-split header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.t-split .ct{text-align:right}
+.t-split h2{color:var(--c);border-bottom:2px solid var(--c)}
+.t-soft h1{color:var(--c)}
+.t-soft h2{color:var(--c);background:color-mix(in srgb,var(--c) 14%,#fff);border-radius:4px;padding:.2em .6em}
+.t-ruled h2{color:var(--c);border-top:2px solid var(--c);padding-top:.25em}
+.t-literary h1{font-variant:small-caps}
+.t-literary h2{font-style:italic;font-size:1.2em;color:var(--c);border-bottom:1px dotted var(--c)}
+.t-accent h1{display:inline-block;border-bottom:4px solid var(--c)}
+.t-accent h2{color:var(--c)}
