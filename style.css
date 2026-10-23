@@ -138,3 +138,25 @@ dialog h3{margin:16px 0 6px;font-size:14px}
 .ck li:before{position:absolute;left:0;font-weight:700}
 .ck .y:before{content:"\2713";color:#067647}
 .ck .n:before{content:"!";color:#b42318;left:5px}
+
+@media print{dialog{display:none!important}}
+
+/* Tools, tracker */
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.tabs .on{background:var(--ink);color:#fff;border-color:var(--ink)}
+#tx{min-height:300px;margin:8px 0;padding:8px;border:1px solid var(--line);border-radius:6px;font:12px/1.4 ui-monospace,Consolas,monospace;width:100%}
+.hl{margin:4px 0 10px}
+.chip[data-copy]{background:#eef4ff;color:#1d3a6b;border-color:#c7d7f5;cursor:pointer}
+mark{background:#fde68a;color:inherit;padding:0 1px;border-radius:2px}
+#apps{margin-top:36px}
+#apps h2{margin:0 0 4px;font-size:20px}
+.af{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;align-items:end;margin:12px 0;padding:12px;background:#fff;border:1px solid var(--line);border-radius:10px}
+.af input,.af select,.at select{width:100%;padding:7px 8px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);font-size:13px}
+.af label{margin:0}
+.tw{overflow:auto;background:#fff;border:1px solid var(--line);border-radius:10px}
+.at{width:100%;border-collapse:collapse;font-size:13px}
+.at th,.at td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.at th{color:var(--mut);font-weight:600;font-size:12px}
+.at .acts{flex-wrap:wrap}
+.late{color:#b42318;font-weight:600}
+@media print{mark{background:none}}
