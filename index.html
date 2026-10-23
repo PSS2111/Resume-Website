@@ -19,6 +19,7 @@
   </div>
   <div class="bar ed">
     <span id="pages" class="pg" title="Estimated from the layout. Check the print preview to confirm."></span>
+    <button id="ats">ATS check</button>
     <button id="one">One pager</button>
     <button class="pri" id="pdf">Download PDF</button>
     <button class="pri" id="doc">Download Word</button>
@@ -53,6 +54,10 @@
   </aside>
   <section id="stage"><div id="paper"></div></section>
 </main>
+<dialog id="atsd"><div class="hd"><h2>ATS match check</h2><button class="add" id="atsx">Close</button></div>
+<p class="hint">Paste a job description. It is compared with the resume you have open ("<span id="atsn"></span>") and the missing keywords are listed.</p>
+<textarea id="jd" placeholder="Paste the full job description here"></textarea>
+<button class="go" id="atsgo">Check match</button><div id="atsr"></div></dialog>
 <div id="toast" role="status"></div>
 <script src="app.js"></script>
 </body>
