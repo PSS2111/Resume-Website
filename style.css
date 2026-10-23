@@ -115,3 +115,26 @@ body:not(.home) #home,body.home .ed,body.home .app{display:none}
 .meta b{color:var(--ink);font-size:14px}
 .acts{display:flex;gap:6px}
 .rc.nw{align-items:center;justify-content:center;min-height:300px;border-style:dashed;color:var(--mut);font-weight:600}
+
+/* ATS checker */
+dialog{width:min(720px,94vw);max-height:90vh;overflow:auto;border:0;border-radius:10px;padding:18px;color:var(--ink)}
+dialog::backdrop{background:#0006}
+dialog h2{margin:0;font-size:18px}
+dialog h3{margin:16px 0 6px;font-size:14px}
+#jd{min-height:150px;margin:8px 0;padding:8px;border:1px solid var(--line);border-radius:6px;font-size:13px;width:100%}
+.go{background:var(--ink);color:#fff;border-color:var(--ink);margin-bottom:8px}
+.go:hover{background:#2c3a4d}
+.sc{display:flex;align-items:center;gap:12px;margin:10px 0 6px}
+.sc b{font-size:34px}
+.g{color:#067647}.o{color:#b54708}.r{color:#b42318}
+.bar2{height:8px;background:#e5e7eb;border-radius:4px;overflow:hidden}
+.bar2 i{display:block;height:100%;background:var(--acc)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:3px 10px;border-radius:99px;background:#e6f4ea;color:#14532d;font-size:12px;border:1px solid #b7dfc4}
+.chip.m{background:#fff4e5;color:#7a3e00;border-color:#f5cf94;cursor:pointer}
+.chip.m:hover{background:#ffe8c7}
+.ck{margin:0;padding:0;list-style:none;font-size:13px}
+.ck li{padding:2px 0 2px 22px;position:relative}
+.ck li:before{position:absolute;left:0;font-weight:700}
+.ck .y:before{content:"\2713";color:#067647}
+.ck .n:before{content:"!";color:#b42318;left:5px}
