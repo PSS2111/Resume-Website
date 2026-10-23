@@ -178,4 +178,52 @@ $('#grid').addEventListener('click',e=>{
 $('#grid').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.classList.contains('rc'))e.target.click()});
 $('#homeBtn').onclick=()=>show(true);
 $('.brand').onclick=()=>show(true);
+/* ATS match checker */
+const STOP=new Set(`a an the and or of to in for with on at by from as is are was were be been being this that these those it its we you your our their they will would can could should may might must shall do does did have has had not no if than then so such into over under about across per via etc also other more most any all each both either who whom whose which what when where how why while within without including include includes able ability strong strongly good great excellent proven demonstrated experience experiences work working works worked job role position candidate candidates team teams year years plus preferred required requirements requirement responsibilities responsibility qualifications qualification skills skill knowledge understanding familiarity looking seeking join company opportunity opportunities benefits salary location remote hybrid onsite full time part new use using used help support ensure make making well like need needs want day days us one two three first related relevant various multiple highly environment e.g i.e`.split(/\s+/));
+const TECH=new Set(`java python javascript typescript c++ c# go golang ruby php swift kotlin sql mysql postgresql mongodb oracle nosql redis react angular vue node nodejs node.js express django flask spring springboot aws azure gcp docker kubernetes jenkins git github gitlab ci/cd cicd selenium cypress playwright junit testng pytest appium postman jmeter api apis graphql microservices agile scrum jira devops linux html css tensorflow pytorch pandas numpy scikit-learn ml ai bdd tdd automation testing sdet qa dsa oop`.split(/[\s,]+/).filter(Boolean).concat(['machine learning','rest api','spring boot','unit testing','test automation','data structures','regression testing','api testing','manual testing','performance testing','deep learning','data analysis']));
+const toks=t=>(t.toLowerCase().replace(/[\u2019']/g,'').match(/[a-z0-9][a-z0-9+#.\/-]*/g)||[]).map(w=>w.replace(/[.\/-]+$/,'')).filter(Boolean);
+const stem=w=>w.length>3?w.replace(/(ing|ed|es|s)$/,''):w;
+const stm=t=>' '+t.split(' ').map(stem).join(' ')+' ';
+function plain(r){const t=document.createElement('textarea');t.innerHTML=html(r).replace(/<[^>]+>/g,' ');return t.value}
+function kws(jd){
+ const c={},ok=x=>x.length>1&&!STOP.has(x)&&!/^\d+$/.test(x),add=x=>c[x]=(c[x]||0)+1;
+ jd.split(/[\n,;:!?()\u2022|]|\.\s/).forEach(seg=>{const w=toks(seg);w.forEach((x,i)=>{if(ok(x)){add(x);if(i+1<w.length&&ok(w[i+1]))add(x+' '+w[i+1])}})});
+ let a=Object.keys(c).filter(t=>c[t]>=2||TECH.has(t));
+ if(a.length<8)a=Object.keys(c).filter(t=>!t.includes(' '));
+ const bi=a.filter(t=>t.includes(' '));
+ a=a.filter(t=>t.includes(' ')||TECH.has(t)||!bi.some(b=>b.split(' ').includes(t)&&c[t]<=c[b]));
+ return a.map(t=>({t,w:c[t]+(TECH.has(t)?3:0)})).sort((x,y)=>y.w-x.w).filter((x,i,A)=>A.findIndex(y=>stm(y.t)===stm(x.t))===i).slice(0,30);
+}
+function run(){
+ const r=cur(),jd=r.jd||'',out=$('#atsr');
+ if(jd.trim().split(/\s+/).length<15){out.innerHTML='<p class="hint">Paste a longer job description (at least a few lines) to get a useful result.</p>';return}
+ const K=kws(jd),txt=plain(r),rs=' '+toks(txt).map(stem).join(' ')+' ';
+ const hit=K.filter(k=>rs.includes(stm(k.t))),miss=K.filter(k=>!hit.includes(k));
+ const tot=K.reduce((s,k)=>s+k.w,0)||1,score=Math.round(hit.reduce((s,k)=>s+k.w,0)/tot*100);
+ const cls=score>=75?'g':score>=50?'o':'r',lab=score>=75?'Strong match':score>=50?'Decent match. Add the missing keywords where they are true.':'Low match. This resume is missing many of the keywords in the job description.';
+ const hs=[...html(r).matchAll(/<h2>(.*?)<\/h2>/g)].map(m=>m[1].toLowerCase()),has=w=>hs.some(h=>h.includes(w)),n=pages();
+ const chk=[
+  [/[\w.+-]+@[\w-]+\.[\w.]+/.test(txt),'Email address is present','Add an email address'],
+  [/\+?\d[\d\s()-]{8,}/.test(txt),'Phone number is present','Add a phone number'],
+  [has('experience')||has('project'),'Experience or Projects heading found','Show a section called Experience or Projects; ATS looks for these headings'],
+  [has('education'),'Education heading found','Show a section called Education'],
+  [has('skill'),'Skills section is visible','Show a Skills section; ATS matches keywords from it'],
+  [n<=2,`Length is ${n} page${n>1?'s':''}`,`Length is ${n} pages; aim for 1 to 2`]];
+ out.innerHTML=`<div class="sc"><b class="${cls}">${score}%</b><span>${lab}</span></div><div class="bar2"><i style="width:${score}%"></i></div>
+ <h3>Missing keywords (${miss.length})</h3>${miss.length?`<p class="hint">Click a keyword to add it to your Skills. Add only what you really know. Otherwise work it into a bullet point where it is true.</p><div class="chips">${miss.map(k=>`<button class="chip m" data-kw="${esc(k.t)}">+ ${esc(k.t)}</button>`).join('')}</div>`:'<p class="hint">Nothing important is missing.</p>'}
+ <h3>Matched keywords (${hit.length})</h3><div class="chips">${hit.map(k=>`<span class="chip">${esc(k.t)}</span>`).join('')||'<span class="hint">None yet</span>'}</div>
+ <h3>ATS format check</h3><ul class="ck">${chk.map(([ok,y,no])=>`<li class="${ok?'y':'n'}">${ok?y:no}</li>`).join('')}</ul>
+ <p class="hint">This is a keyword-based estimate that runs in your browser. Real ATS products score differently, so use it as a guide.</p>`;
+}
+$('#ats').onclick=()=>{const r=cur();$('#jd').value=r.jd||'';$('#atsn').textContent=r.name;$('#atsr').innerHTML='';$('#atsd').showModal();if(r.jd)run()};
+$('#atsx').onclick=()=>$('#atsd').close();
+$('#atsgo').onclick=()=>{cur().jd=$('#jd').value;save();run()};
+$('#jd').oninput=e=>{cur().jd=e.target.value;save()};
+$('#atsr').onclick=e=>{
+ const k=e.target.dataset.kw;if(!k)return;
+ const r=cur();let s=r.d.skills.find(x=>x.a==='Additional Skills');
+ if(!s){s={a:'Additional Skills',b:'',c:'',d:''};r.d.skills.push(s)}
+ s.b=s.b?s.b+', '+k:k;r.on.skills=true;commit();form();run();
+};
+
 show(true);
