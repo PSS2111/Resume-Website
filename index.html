@@ -19,13 +19,14 @@
   </div>
   <div class="bar ed">
     <span id="pages" class="pg" title="Estimated from the layout. Check the print preview to confirm."></span>
-    <button id="ats">ATS check</button>
+    <button id="ats">ATS &amp; quality</button>
     <button id="one">One pager</button>
     <button class="pri" id="pdf">Download PDF</button>
     <button class="pri" id="doc">Download Word</button>
   </div>
 </header>
-<section id="home"><div class="hw"><div class="hh"><div><h1>Your resumes</h1><p>Pick a resume to keep editing, or start a new one for a different role.</p></div><button class="pri" data-act="new" onclick="document.getElementById('grid').querySelector('.nw').click()">+ New resume</button></div><div id="grid"></div></div></section>
+<section id="home"><div class="hw"><div class="hh"><div><h1>Your resumes</h1><p>Pick a resume to keep editing, or start a new one for a different role.</p></div><div class="acts"><button class="add" id="bk">Backup</button><button class="add" id="imp">Import</button><input type="file" id="impf" accept=".json" hidden></div>
+<button class="pri" data-act="new" onclick="document.getElementById('grid').querySelector('.nw').click()">+ New resume</button></div><div id="grid"></div><div id="apps"></div></div></section>
 <main class="app">
   <aside id="editor">
     <div class="card">
@@ -54,10 +55,16 @@
   </aside>
   <section id="stage"><div id="paper"></div></section>
 </main>
-<dialog id="atsd"><div class="hd"><h2>ATS match check</h2><button class="add" id="atsx">Close</button></div>
-<p class="hint">Paste a job description. It is compared with the resume you have open ("<span id="atsn"></span>") and the missing keywords are listed.</p>
+<dialog id="atsd"><div class="hd"><h2>ATS and resume tools</h2><button class="add" id="atsx">Close</button></div>
+<div class="tabs"><button class="add on" data-tab="match">Job match</button><button class="add" data-tab="role">Role keywords</button><button class="add" data-tab="quality">Quality check</button><button class="add" data-tab="text">ATS text view</button></div>
+<div class="pn" id="p-match"><p class="hint">Paste a job description. It is compared with the resume you have open.</p>
 <textarea id="jd" placeholder="Paste the full job description here"></textarea>
-<button class="go" id="atsgo">Check match</button><div id="atsr"></div></dialog>
+<button class="go" id="atsgo">Check match</button>
+<label class="sw hl"><input type="checkbox" id="hl"> Highlight matched keywords in the preview</label><div id="atsr"></div></div>
+<div class="pn" id="p-role" hidden><label>Role<select id="role"></select></label><div id="rolr"></div></div>
+<div class="pn" id="p-quality" hidden><div id="qr"></div></div>
+<div class="pn" id="p-text" hidden><p class="hint">This is the plain text an ATS can read from your resume. Check that the order makes sense and nothing is missing.</p>
+<textarea id="tx" readonly></textarea><button class="go" id="txc">Copy</button> <button class="go" id="txd">Download .txt</button></div></dialog>
 <div id="toast" role="status"></div>
 <script src="app.js"></script>
 </body>
